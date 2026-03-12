@@ -1,18 +1,25 @@
 name: Build APK
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python_version: '3.10'
+
       - name: Install
-        run: pip install python-for-android
+        run: pip install python-for-android openssl
+
       - name: Build
         run: p4a apk --private . --package=ru.alex.sub --name="Sub" --version=0.1 --bootstrap=sdl2 --requirements=python3,kivy,kivymd,plyer,sqlite3 --arch=arm64-v8a
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
         with:
           name: app
           path: "*.apk"
