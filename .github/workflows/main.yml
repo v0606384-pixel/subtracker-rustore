@@ -10,16 +10,19 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python_version: '3.10'
+          python-version: '3.10'
 
-      - name: Install
-        run: pip install python-for-android openssl
+      - name: Install Tools
+        run: |
+          pip install python-for-android openssl
+          sudo apt-get update
+          sudo apt-get install -y zip unzip openjdk-17-jdk ant autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
 
-      - name: Build
-        run: p4a apk --private . --package=ru.alex.sub --name="Sub" --version=0.1 --bootstrap=sdl2 --requirements=python3,kivy,kivymd,plyer,sqlite3 --arch=arm64-v8a
+      - name: Build APK with P4A
+        run: p4a apk --private . --package=ru.alex.subtracker --name="SubTracker" --version=0.1 --bootstrap=sdl2 --requirements=python3,kivy,kivymd,plyer,sqlite3 --arch=arm64-v8a
 
-      - name: Upload
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app
+          name: SubTracker-Release
           path: "*.apk"
